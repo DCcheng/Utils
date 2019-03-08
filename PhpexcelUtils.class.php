@@ -1,0 +1,26 @@
+<?php
+	include_once dirname(__FILE__)."/PHPExcel/PHPExcel.php";
+	class PhpexcelUtils{
+
+		function load($filename){
+			return PHPExcel_IOFactory::load($filename);
+		}
+
+		function output($filename,$obj){
+                  // 输出Excel表格到浏览器下载
+                  ob_end_clean();
+                  header('Content-Type: application/vnd.ms-excel;charset=UTF-8');
+                  header('Content-Disposition: attachment;filename="'.iconv('UTF-8', 'GB2312', $filename).'.xls"');
+                  header('Cache-Control: max-age=0');
+                  // If you're serving to IE 9, then the following may be needed
+                  header('Cache-Control: max-age=1');
+                  // If you're serving to IE over SSL, then the following may be needed
+                  header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+                  header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+                  header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+                  header('Pragma: public'); // HTTP/1.0
+                  $objWriter = new PHPExcel_Writer_Excel5($obj);
+                  $objWriter->save('php://output');
+              }
+	}
+?>
